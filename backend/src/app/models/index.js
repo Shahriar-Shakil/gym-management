@@ -1,18 +1,26 @@
-import dotenv from "dotenv";
-import { Sequelize } from "sequelize";
+import { sequelize } from "./database.js";
+import MembershipPackage from "./membershipPackage.js";
+import Payment from "./payment.js";
+import User from "./user.js";
+import UserMembership from "./userMembership.js";
 
-dotenv.config();
+// User associations
+User.hasMany(Payment, { foreignKey: "userId" });
+User.hasMany(UserMembership, { foreignKey: "userId" });
 
-const sequelize = new Sequelize(
-  process.env.DB_NAME || "gym_management",
-  process.env.DB_USER || "gym_admin",
-  process.env.DB_PASSWORD || "gym_password123",
-  {
-    host: process.env.DB_HOST || "localhost",
-    port: process.env.DB_PORT || 5432,
-    dialect: "postgres",
-    logging: false,
-  }
-);
+// Payment associations
+Payment.belongsTo(User, { foreignKey: "userId" });
+Payment.belongsTo(MembershipPackage, { foreignKey: "packageId" });
+Payment.belongsTo(User, { as: "approver", foreignKey: "approvedBy" });
 
-export { sequelize, Sequelize };
+// UserMembership associations
+UserMembership.belongsTo(User, { foreignKey: "userId" });
+UserMembership.belongsTo(MembershipPackage, { foreignKey: "packageId" });
+UserMembership.belongsTo(Payment, { foreignKey: "paymentId" });
+
+// MembershipPackage associations
+MembershipPackage.hasMany(Payment, { foreignKey: "packageId" });
+MembershipPackage.hasMany(UserMembership, { foreignKey: "packageId" });
+
+export { sequelize };
+export { User, MembershipPackage, Payment, UserMembership };

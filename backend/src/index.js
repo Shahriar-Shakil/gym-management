@@ -6,8 +6,13 @@ import rateLimit from "express-rate-limit";
 import helmet from "helmet";
 import morgan from "morgan";
 import { sequelize } from "./app/models/index.js";
+import MembershipPackage from "./app/models/membershipPackage.js";
+import Payment from "./app/models/payment.js";
 import User from "./app/models/user.js";
+import UserMembership from "./app/models/userMembership.js";
+import adminRouter from "./app/routes/admin.js";
 import authRouter from "./app/routes/auth.js";
+import profileRouter from "./app/routes/profile.js";
 import { pool, testConnection } from "./config/database.js";
 
 dotenv.config();
@@ -63,8 +68,10 @@ if (process.env.NODE_ENV === "development") {
   app.use(morgan("combined"));
 }
 
-// Register auth routes
+// Register routes
 app.use("/api/auth", authRouter);
+app.use("/api/profile", profileRouter);
+app.use("/api/admin", adminRouter);
 
 // Health check endpoint
 app.get("/health", async (req, res) => {

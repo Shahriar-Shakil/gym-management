@@ -9,8 +9,9 @@
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",
     "migrate": "node scripts/migrate.js",
-    "seed": "pnpx sequelize-cli db:seed:all --seeders-path seeders",
-    "seed:undo": "pnpx sequelize-cli db:seed:undo:all --seeders-path seeders"
+    "seed": "node scripts/seed.js",
+    "seed:undo": "pnpx sequelize-cli db:seed:undo:all --seeders-path seeders",
+    "db:reset": "node scripts/seed.js"
   },
   "keywords": [],
   "author": "Shahriar Shakil",
